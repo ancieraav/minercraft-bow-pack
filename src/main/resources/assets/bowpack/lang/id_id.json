@@ -1,0 +1,15 @@
+{
+  "enchantment.bowpack.multi_shot": "Multi Shot",
+  "enchantment.bowpack.front_shot": "Front Shot",
+  "enchantment.bowpack.back_shot": "Back Shot",
+  "enchantment.bowpack.diagonal_shot": "Diagonal Shot",
+  "enchantment.bowpack.ricochet_shot": "Ricochet Shot",
+  "enchantment.bowpack.bouncy_shot": "Bouncy Shot",
+  "enchantment.bowpack.anti_friction_shot": "Anti Friction Shot",
+  "enchantment.bowpack.breakthrough_shot": "Breakthrough Shot",
+  "enchantment.bowpack.rainy_shot": "Rainy Shot",
+  "enchantment.bowpack.follow_shot": "Follow Shot",
+  "itemGroup.bowpack": "Bow Pack",
+  "tag.item.bowpack.enchantable.ranged_weapon": "Bow dan Crossbow",
+  "tag.item.bowpack.disabled": "Tidak ada item yang didukung"
+}

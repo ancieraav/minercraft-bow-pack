@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "bowpack",
+  "version": "${version}",
+  "name": "Bow Pack",
+  "description": "Combinable projectile enchantments for bows and crossbows.",
+  "environment": "*",
+  "entrypoints": { "main": ["dev.bowpack.BowPack"] },
+  "mixins": ["bowpack.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "26.3",
+    "java": ">=25",
+    "fabric-api": ">=0.161.0+26.3"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "package": "dev.bowpack.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "ProjectileWeaponMixin",
+    "SkeletonBowMixin",
+    "IllusionerBowMixin",
+    "ArrowStateMixin",
+    "ArrowImpactMixin",
+    "ArrowFlightMixin",
+    "ArrowFollowMixin",
+    "ArrowPhysicsMixin",
+    "ArrowRainyMixin",
+    "LivingDamageMixin"
+  ],
+  "injectors": { "defaultRequire": 1 }
+}

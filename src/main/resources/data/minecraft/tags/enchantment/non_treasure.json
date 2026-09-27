@@ -1,0 +1,14 @@
+{
+  "values": [
+    "bowpack:multi_shot",
+    "bowpack:front_shot",
+    "bowpack:back_shot",
+    "bowpack:diagonal_shot",
+    "bowpack:bouncy_shot",
+    "bowpack:breakthrough_shot",
+    "bowpack:follow_shot"
+  ],
+  "fabric:remove": [
+    "minecraft:multishot"
+  ]
+}

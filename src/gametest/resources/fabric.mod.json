@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "bowpack-gametest",
+  "version": "1.2.0",
+  "name": "Bow Pack Game Tests",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-gametest": [
+      "dev.bowpack.gametest.WeaponGameTests",
+      "dev.bowpack.gametest.ProjectileGameTests",
+      "dev.bowpack.gametest.RicochetGameTests",
+      "dev.bowpack.gametest.MountedRicochetGameTests",
+      "dev.bowpack.gametest.BookAccessGameTests",
+      "dev.bowpack.gametest.AmmunitionGameTests",
+      "dev.bowpack.gametest.AnvilProgressionGameTests",
+      "dev.bowpack.gametest.MobWeaponGameTests",
+      "dev.bowpack.gametest.LifetimeGameTests",
+      "dev.bowpack.gametest.LifetimeTimingGameTests",
+      "dev.bowpack.gametest.AcquisitionGameTests",
+      "dev.bowpack.gametest.LootAcquisitionGameTests",
+      "dev.bowpack.gametest.FollowPhysicsGameTests",
+      "dev.bowpack.gametest.RainyShotGameTests",
+      "dev.bowpack.gametest.RainySaveGameTests",
+      "dev.bowpack.gametest.BreakthroughGameTests"
+    ]
+  },
+  "depends": { "bowpack": "*", "fabric-gametest-api-v1": "*" }
+}
