@@ -70,7 +70,7 @@ public class FollowPhysicsGameTests {
                 new ItemStack(Items.ARROW), new ItemStack(Items.BOW));
         arrow.setDeltaMovement(velocity);
         arrow.setNoGravity(true);
-        ((ArrowAccess) arrow).bowpack$setState(new ShotState(0, 0, true, false, 0, follow,
+        ((ArrowAccess) arrow).bowpack$setState(new ShotState(0, 0, true, false, follow,
                 velocity.length(), UUID.randomUUID(), Optional.empty()));
         test.getLevel().addFreshEntity(arrow);
         return arrow;

@@ -34,7 +34,7 @@ public class BookAccessGameTests {
             new BookSpec(BowEnchantments.BOUNCY_SHOT, 3),
             new BookSpec(BowEnchantments.ANTI_FRICTION_SHOT, 1),
             new BookSpec(BowEnchantments.BREAKTHROUGH_SHOT, 1),
-            new BookSpec(BowEnchantments.RAINY_SHOT, 3),
+            new BookSpec(BowEnchantments.UNSTOPABLE, 1),
             new BookSpec(BowEnchantments.FOLLOW_SHOT, 1));
 
     @GameTest(structure = ProjectileFixtures.ARENA)
@@ -59,7 +59,7 @@ public class BookAccessGameTests {
     }
 
     @GameTest(structure = ProjectileFixtures.ARENA)
-    public void creativeCatalogContainsOnlyTwentyNineSearchableBooks(GameTestHelper test) {
+    public void creativeCatalogContainsOnlyTwentySevenSearchableBooks(GameTestHelper test) {
         CreativeModeTabs.tryRebuildTabContents(test.getLevel().enabledFeatures(), true,
                 test.getLevel().registryAccess());
         var tab = BuiltInRegistries.CREATIVE_MODE_TAB.getOptional(BowPack.id("bow_pack")).orElseThrow();
@@ -147,7 +147,7 @@ public class BookAccessGameTests {
     }
 
     private static void assertCatalog(GameTestHelper test, Collection<ItemStack> books) {
-        test.assertValueEqual(books.size(), 29, "The Bow Pack catalog must contain exactly 29 books");
+        test.assertValueEqual(books.size(), 27, "The Bow Pack catalog must contain exactly 27 books");
         test.assertTrue(books.stream().allMatch(stack -> stack.is(Items.ENCHANTED_BOOK)),
                 "The Bow Pack catalog must not contain demo weapons or other items");
         var enchantments = test.getLevel().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);

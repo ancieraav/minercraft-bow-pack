@@ -1,12 +1,15 @@
 [CmdletBinding()]
 param(
-    [string] $ModJar = (Join-Path $PSScriptRoot '../build/libs/bow-pack-1.2.0.jar'),
+    [string] $ModJar,
     [string] $MinecraftDirectory = (Join-Path $env:APPDATA '.minecraft'),
     [switch] $ValidateOnly
 )
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
+if (-not $PSBoundParameters.ContainsKey('ModJar')) {
+    $ModJar = Join-Path $PSScriptRoot '../build/libs/bow-pack-1.3.0.jar'
+}
 . (Join-Path $PSScriptRoot 'InstallSupport.ps1')
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12

@@ -99,7 +99,8 @@ public class ProjectileGameTests {
                 new Vec3(1, 0, 0), true, 3, true);
         UUID hit = UUID.randomUUID();
         UUID companion = UUID.randomUUID();
-        ShotState expected = ProjectileFixtures.state(original).ignoreGroup(hit, List.of(hit, companion));
+        ShotState expected = ProjectileFixtures.state(original).ignoreGroup(hit, List.of(hit, companion))
+                .withUnstopable(true);
         ((ArrowAccess) original).bowpack$setState(expected);
         ProblemReporter.Collector problems = new ProblemReporter.Collector();
         var output = TagValueOutput.createWithContext(problems, test.getLevel().registryAccess());
@@ -111,11 +112,13 @@ public class ProjectileGameTests {
         test.assertTrue(restored.isNoGravity(), "Reloaded arrow retains Anti Friction");
         var legacyTag = output.buildResult();
         legacyTag.getCompound("bowpack:shot").orElseThrow().remove("ignored_companions");
+        legacyTag.getCompound("bowpack:shot").orElseThrow().remove("unstopable");
         Arrow legacy = new Arrow(EntityTypes.ARROW, test.getLevel());
         legacy.load(TagValueInput.create(problems, test.getLevel().registryAccess(), legacyTag));
         test.assertTrue(problems.isEmpty(), "Old saved arrows must remain readable: " + problems.getReport());
-        test.assertValueEqual(ProjectileFixtures.state(legacy), expected.ignore(Optional.of(hit)),
-                "Version 1.0.0 arrow data preserves its original hit immunity without companions");
+        test.assertValueEqual(ProjectileFixtures.state(legacy),
+                expected.ignore(Optional.of(hit)).withUnstopable(false),
+                "Older arrow data keeps hit immunity and has no Unstopable effect");
         test.succeed();
     }
 }

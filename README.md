@@ -1,6 +1,6 @@
 # Bow Pack 🏹
 
-Sepuluh enchantment untuk **Bow dan Crossbow**, untuk Minecraft Java **26.3** dengan Fabric Loader **0.19.5** dan Fabric API **0.161.0+26.3**. Versi mod: **1.2.0**.
+Sepuluh enchantment untuk **Bow dan Crossbow**, untuk Minecraft Java **26.3** dengan Fabric Loader **0.19.5** dan Fabric API **0.161.0+26.3**. Versi mod: **1.3.0**.
 
 ## Memasang di Windows
 
@@ -11,7 +11,7 @@ Sepuluh enchantment untuk **Bow dan Crossbow**, untuk Minecraft Java **26.3** de
    powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\install.ps1
    ```
 
-   Jika JAR berada di tempat lain, tambahkan `-ModJar "C:\lokasi\bow-pack-1.2.0.jar"`. Folder Minecraft khusus dapat dipilih dengan `-MinecraftDirectory "C:\lokasi\.minecraft"`.
+   Jika JAR berada di tempat lain, tambahkan `-ModJar "C:\lokasi\bow-pack-1.3.0.jar"`. Folder Minecraft khusus dapat dipilih dengan `-MinecraftDirectory "C:\lokasi\.minecraft"`.
 3. Buka launcher, pilih instalasi **Bow Pack 26.3**, lalu **Play**. Aktifkan tampilan instalasi **Modded** jika profil tersembunyi. Launcher mengunduh komponen Minecraft dan Java yang diperlukan saat pertama kali bermain.
 4. Uji dahulu di world baru. Profil menggunakan folder `.minecraft` yang sama sehingga world lama tetap terlihat.
 
@@ -27,11 +27,11 @@ Untuk LAN, pasang Bow Pack, Fabric Loader, dan Fabric API dengan versi yang sama
 
 ## Memakai enchantment
 
-Buka tab Creative **Bow Pack** untuk mengambil salah satu dari 29 buku enchantment. Di anvil, letakkan Bow atau Crossbow di slot kiri dan buku di slot kanan, lalu ambil hasilnya. Cari `ricochet`, `friction`, atau `rainy` pada pencarian Creative. Katalog hanya berisi buku, tanpa senjata demo.
+Buka tab Creative **Bow Pack** untuk mengambil salah satu dari 27 buku enchantment. Di anvil, letakkan Bow atau Crossbow di slot kiri dan buku di slot kanan, lalu ambil hasilnya. Cari `ricochet`, `friction`, atau `unstopable` pada pencarian Creative. Katalog hanya berisi buku, tanpa senjata demo.
 
 Dalam **Survival**, Multi, Front, Back, Diagonal, Bouncy, Breakthrough, dan Follow bisa diperoleh dari enchanting table pada buku/Bow/Crossbow, librarian, serta loot dan memancing yang menyediakan enchantment acak. Mob juga dapat muncul dengan perlengkapan ber-enchantment biasa ini dan memakai efeknya.
 
-**Ricochet, Anti Friction, dan Rainy adalah enchantment harta karun**: didapat lewat librarian, loot, dan memancing, bukan enchanting table. Ketiganya memakai harga buku harta karun vanilla. Tidak setiap chest memiliki pilihan enchantment yang sama; hadiah khusus dengan daftar enchantment tetap tidak diubah.
+**Ricochet, Anti Friction, dan Unstopable adalah enchantment harta karun**: didapat lewat librarian, loot, dan memancing, bukan enchanting table. Ketiganya memakai harga buku harta karun vanilla. Tidak setiap chest memiliki pilihan enchantment yang sama; hadiah khusus dengan daftar enchantment tetap tidak diubah.
 
 Rak buku, lapis, XP, penggabungan level, penalti anvil, **Too Expensive**, dan grindstone mengikuti Minecraft. Trade Rebalance eksperimental tidak diubah; jalur librarian di atas memakai perdagangan vanilla standar. Loot yang sudah dibuka dan penawaran villager yang sudah tersimpan tidak diganti.
 
@@ -46,7 +46,7 @@ Dengan cheats aktif atau izin operator, gunakan command bawaan Minecraft untuk m
 /give @s minecraft:enchanted_book[minecraft:stored_enchantments={"bowpack:bouncy_shot":3}] 1
 /give @s minecraft:enchanted_book[minecraft:stored_enchantments={"bowpack:anti_friction_shot":1}] 1
 /give @s minecraft:enchanted_book[minecraft:stored_enchantments={"bowpack:breakthrough_shot":1}] 1
-/give @s minecraft:enchanted_book[minecraft:stored_enchantments={"bowpack:rainy_shot":3}] 1
+/give @s minecraft:enchanted_book[minecraft:stored_enchantments={"bowpack:unstopable":1}] 1
 /give @s minecraft:enchanted_book[minecraft:stored_enchantments={"bowpack:follow_shot":1}] 1
 ```
 
@@ -61,9 +61,11 @@ Angka setelah ID enchantment dapat dikurangi untuk memilih level buku. Untuk lan
 /enchant @s bowpack:bouncy_shot 3
 /enchant @s bowpack:anti_friction_shot 1
 /enchant @s bowpack:breakthrough_shot 1
-/enchant @s bowpack:rainy_shot 3
+/enchant @s bowpack:unstopable 1
 /enchant @s bowpack:follow_shot 1
 ```
+
+Pilih salah satu dari perintah **Bouncy** atau **Unstopable**; keduanya tidak dapat dipasang pada senjata yang sama.
 
 | Enchantment | Efek |
 | --- | --- |
@@ -78,8 +80,8 @@ Angka setelah ID enchantment dapat dikurangi untuk memilih level buku. Untuk lan
 | **Bouncy Shot I–III** | Pantulan terhadap block mengikuti sudut datang, maksimum 10/20/30 kali per panah. Setelah itu panah menancap seperti biasa. |
 | **Anti Friction Shot I** | Panah tidak dipengaruhi gravitasi atau hambatan saat terbang, termasuk hambatan udara dan air. |
 | **Breakthrough Shot I** | Panah menembus lawan tanpa menambah damage tiap serangan. Jika digabung Ricochet, satu panah menembus dan satu lagi memantul saat ada sasaran pantulan. |
-| **Rainy Shot I–III** | Setiap 10 detik selama penembak aktif mengenai lawan, munculkan 6/8/10 panah di atas sasaran. Panah diam dan membidik selama 2 detik, lalu melesat cepat tanpa gravitasi atau hambatan. Efek amunisi dan senjata dipertahankan; efek enchantment Bow Pack lain tidak ikut. Siklus berhenti setelah 21 detik tanpa serangan yang mengenai lawan. |
-| **Follow Shot I** | Panah mengejar lawan dengan belokan maksimum 10° per tick. Berlaku juga untuk panah tambahan dari enchantment lain, kecuali Rainy Shot. |
+| **Unstopable I** | Panah menghancurkan satu blok yang terkena jika ketahanan ledakannya masih bisa dilawan daya dasar TNT. Panah terus melaju dan dapat menghancurkan blok berikutnya. Tidak ada ledakan, efek ledakan, radius kerusakan, atau damage ke makhluk sekitar. Blok yang hancur menjatuhkan drop biasa. |
+| **Follow Shot I** | Panah mengejar lawan dengan belokan maksimum 10° per tick. Berlaku juga untuk panah tambahan dari enchantment lain. |
 
 **Ricochet tetap dipengaruhi gravitasi.** Panah diarahkan ke posisi sasaran saat pantulan, tanpa menaikkan arah untuk mengimbangi gravitasi. Panah bisa jatuh sebelum sampai, terhalang block, atau meleset. Follow dapat membelokkan panah menuju sasaran bergerak; Anti Friction menghilangkan gravitasi dan hambatan jika dipasang bersamaan.
 
@@ -91,7 +93,7 @@ Jika Ricochet dan Piercing bawaan dipasang bersamaan tanpa Breakthrough, **Ricoc
 
 ## Kombinasi dan damage
 
-Semua sepuluh enchantment dapat digabungkan. Front hanya melebar pada arah utama, tidak menambah pasangan untuk Diagonal atau Back. Multi menggandakan setiap panah pada seluruh formasi, mengikuti arah masing-masing:
+Unstopable dan Bouncy tidak dapat digabungkan; satu senjata dapat memakai maksimal sembilan dari sepuluh enchantment Bow Pack. Mending dan Infinity bawaan Minecraft dapat digabung pada Bow. Front hanya melebar pada arah utama, tidak menambah pasangan untuk Diagonal atau Back. Multi menggandakan setiap panah pada seluruh formasi, mengikuti arah masing-masing:
 
 ```text
 Multi Shot II + Front Shot II = 9 panah
@@ -100,24 +102,28 @@ Multi Shot II + Front Shot II = 9 panah
 ↑  ↑  ↑
 ```
 
-Jumlah panah saat tembakan awal adalah `(level Multi + 1) × (1 + level Front + 2 × level Diagonal + level Back)`. Enchantment yang tidak dipasang dihitung level 0. Diagonal I + Front II menghasilkan 5 panah; ditambah Multi II menjadi 15 panah. Kombinasi maksimum menghasilkan **80 panah awal**; Breakthrough + Ricochet dan Rainy dapat menghasilkan panah susulan. Setiap panah bisa memberi damage sendiri; armor, shield, dan aturan perlindungan tetap berlaku.
+Jumlah panah saat tembakan awal adalah `(level Multi + 1) × (1 + level Front + 2 × level Diagonal + level Back)`. Enchantment yang tidak dipasang dihitung level 0. Diagonal I + Front II menghasilkan 5 panah; ditambah Multi II menjadi 15 panah. Kombinasi maksimum menghasilkan **80 panah awal**; Breakthrough + Ricochet dapat menghasilkan panah susulan. Setiap panah bisa memberi damage sendiri; armor, shield, dan aturan perlindungan tetap berlaku.
 
 Panah tambahan membawa efek tembakan, termasuk tipped dan spectral arrows. Ammo dan durability mengikuti satu tembakan biasa. Panah tambahan tidak dapat dipungut. Pantulan Bouncy tidak mengisi ulang batasnya. Firework dari Crossbow tetap berperilaku biasa.
+
+Unstopable memakai ambang ketahanan blok yang tetap, dihitung dari daya dasar TNT. Obsidian dan blok yang tidak dapat dihancurkan tetap utuh. Aturan dunia `projectilesCanBreakBlocks` dapat mematikan perusakan oleh panah; perusakan oleh panah mob juga mengikuti `mobGriefing`. Tidak ada suara, partikel, api, knockback, atau damage dari ledakan.
 
 **Multishot bawaan Minecraft dinonaktifkan**, termasuk spread dari enchantment lama. Gunakan `bowpack:multi_shot` sebagai penggantinya.
 
 Front V dari versi lama tetap tersimpan, tetapi tembakannya dibatasi menjadi Front IV. Buku Front V yang diletakkan di slot kanan anvil menghasilkan level IV. Dua buku Front IV tidak menghasilkan level V. Command `/give` dengan komponen mentah tetap mengikuti kemampuan vanilla; batas efek pada senjata tetap diberlakukan.
 
+Rainy Shot dari versi lama dihapus. Saat item lama dimuat, enchantment Rainy yang tidak dikenal dibuang; item dan enchantment lain tetap tersimpan. Proyektil Rainy lama yang masih berada di world dibuang saat dimuat.
+
 ### Merakit semua enchantment di anvil Survival
 
-Mulai dengan senjata dan sepuluh buku level maksimum yang belum pernah dikerjakan di anvil. Pada setiap langkah, bahan pertama masuk slot kiri dan bahan kedua masuk slot kanan:
+Mulai dengan senjata dan sembilan buku level maksimum yang belum pernah dikerjakan di anvil. Pilih **Bouncy atau Unstopable**. Pada setiap langkah, bahan pertama masuk slot kiri dan bahan kedua masuk slot kanan:
 
 1. Pasangkan Multi IV ke senjata.
 2. Gabungkan Front IV + Back V menjadi buku A, lalu Diagonal III + Ricochet IV menjadi buku B.
 3. Gabungkan buku A + buku B, lalu pasangkan hasilnya ke senjata.
-4. Gabungkan Anti Friction I + Breakthrough I menjadi buku C, lalu Rainy III + Follow I menjadi buku D.
-5. Gabungkan buku C + buku D menjadi buku E, lalu Bouncy III + buku E menjadi buku F.
-6. Pasangkan buku F ke senjata dari langkah 3.
+4. Gabungkan Anti Friction I + Breakthrough I menjadi buku C, lalu buku C + Follow I menjadi buku D.
+5. Gabungkan pilihan Bouncy III/Unstopable I + buku D menjadi buku E.
+6. Pasangkan buku E ke senjata dari langkah 3.
 
 Urutan ini mempertahankan batas biaya Survival. Buku/senjata yang sudah sering dikerjakan dapat tetap terkena **Too Expensive**. Untuk menaikkan level, gabungkan dua buku berlevel sama sampai batas enchantment; pengerjaan itu juga menambah penalti vanilla.
 
@@ -145,7 +151,7 @@ Jika OneDrive mengunci folder hasil kompilasi, jalankan build dari salinan proye
 
 Skrip mencari JDK **25** melalui `JAVA_HOME`, `javac` pada PATH, lalu runtime bawaan Minecraft Launcher. Perubahan lingkungan hanya berlaku selama build dan dikembalikan setelah selesai. Tidak ada pemasangan Java atau perubahan pengaturan global. Task bawaan adalah `test build`; untuk task tertentu gunakan, misalnya, `.\scripts\build.ps1 test`.
 
-Hasil: `build\libs\bow-pack-1.2.0.jar`. Fabric API dibutuhkan saat menjalankan game. Build dan pengujian otomatis tidak menggantikan pemeriksaan visual dalam game.
+Hasil: `build\libs\bow-pack-1.3.0.jar`. Fabric API dibutuhkan saat menjalankan game. Build dan pengujian otomatis tidak menggantikan pemeriksaan visual dalam game.
 
 Pemeriksaan permainan yang perlu dilakukan sebelum memakai world utama:
 
@@ -153,12 +159,12 @@ Pemeriksaan permainan yang perlu dilakukan sebelum memakai world utama:
 - Uji Ricochet I–IV pada radius dan batas pantulan tiap level, sasaran bergerak, tembakan yang jatuh sebelum sampai, serta kredit kill pada level IV.
 - Uji Bouncy pada lantai, dinding, langit-langit, serta batas 10/20/30 pantulan. Gabungkan dengan Anti Friction.
 - Uji Breakthrough bersama Ricochet dan Follow, termasuk keadaan tanpa sasaran pantulan.
-- Uji Rainy I–III: jumlah panah, jeda dua detik, arah ujung panah, kecepatan, siklus 10 detik, dan penghentian setelah 21 detik tanpa hit.
+- Uji Unstopable pada batu, obsidian, dua blok berurutan, dan aturan `projectilesCanBreakBlocks`; pastikan tidak ada efek ledakan. Periksa pula bahwa Unstopable dan Bouncy tidak bisa digabung, serta Mending dan Infinity bisa digabung pada Bow.
 - Uji tembakan dekat dinding, tipped/spectral arrows, ammo, durability, dan larangan mengambil panah tambahan.
 - Uji Back sambil membidik mendatar, ke atas, dan ke bawah; pastikan Front tidak menggandakan Diagonal.
 - Simpan dan buka ulang world saat panah masih aktif; coba kombinasi 80 panah, batas 30 detik, dan permainan LAN.
 - Coba enchanting table, buku librarian/loot/memancing, penggabungan anvil, dan grindstone.
 
-[VERIFICATION-1.2.0.md](VERIFICATION-1.2.0.md) mencatat hasil build, pengujian, dan pemasangan versi ini. [VERIFICATION.md](VERIFICATION.md) tetap menyimpan riwayat versi 1.1.0.
+[VERIFICATION-1.3.0.md](VERIFICATION-1.3.0.md) mencatat hasil pemeriksaan dan pemasangan versi ini. [VERIFICATION-1.2.0.md](VERIFICATION-1.2.0.md) dan [VERIFICATION.md](VERIFICATION.md) tetap menyimpan riwayat versi sebelumnya.
 
 Referensi pemasangan: [Fabric untuk Minecraft 26.3](https://fabricmc.net/2026/09/15/263.html), [metadata profil resmi](https://meta.fabricmc.net/v2/versions/loader/26.3/0.19.5/profile/json), dan [pemasang profil Fabric](https://github.com/FabricMC/fabric-installer/blob/master/src/main/java/net/fabricmc/installer/client/ProfileInstaller.java).

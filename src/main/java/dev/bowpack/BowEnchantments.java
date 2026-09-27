@@ -20,11 +20,11 @@ public final class BowEnchantments {
     public static final ResourceKey<Enchantment> BOUNCY_SHOT = key("bouncy_shot");
     public static final ResourceKey<Enchantment> ANTI_FRICTION_SHOT = key("anti_friction_shot");
     public static final ResourceKey<Enchantment> BREAKTHROUGH_SHOT = key("breakthrough_shot");
-    public static final ResourceKey<Enchantment> RAINY_SHOT = key("rainy_shot");
+    public static final ResourceKey<Enchantment> UNSTOPABLE = key("unstopable");
     public static final ResourceKey<Enchantment> FOLLOW_SHOT = key("follow_shot");
     public static final List<ResourceKey<Enchantment>> ALL = List.of(
             MULTI_SHOT, FRONT_SHOT, BACK_SHOT, DIAGONAL_SHOT, RICOCHET_SHOT, BOUNCY_SHOT,
-            ANTI_FRICTION_SHOT, BREAKTHROUGH_SHOT, RAINY_SHOT, FOLLOW_SHOT);
+            ANTI_FRICTION_SHOT, BREAKTHROUGH_SHOT, UNSTOPABLE, FOLLOW_SHOT);
 
     private BowEnchantments() {
     }
@@ -43,8 +43,8 @@ public final class BowEnchantments {
                 level(weapon, enchantments, BOUNCY_SHOT, 3),
                 level(weapon, enchantments, ANTI_FRICTION_SHOT, 1) > 0,
                 level(weapon, enchantments, BREAKTHROUGH_SHOT, 1) > 0,
-                level(weapon, enchantments, RAINY_SHOT, 3),
-                level(weapon, enchantments, FOLLOW_SHOT, 1) > 0);
+                level(weapon, enchantments, FOLLOW_SHOT, 1) > 0,
+                level(weapon, enchantments, UNSTOPABLE, 1) > 0);
     }
 
     private static int level(ItemStack weapon, HolderLookup.RegistryLookup<Enchantment> registry,

@@ -2,7 +2,7 @@
   "values": [
     "bowpack:ricochet_shot",
     "bowpack:anti_friction_shot",
-    "bowpack:rainy_shot"
+    "bowpack:unstopable"
   ],
   "fabric:remove": [
     "minecraft:multishot"

@@ -5,7 +5,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.bowpack.projectile.ArrowAccess;
 import dev.bowpack.projectile.ArrowLifetime;
 import dev.bowpack.projectile.ArrowRicochet;
-import dev.bowpack.projectile.RainyAccess;
 import dev.bowpack.projectile.ShotState;
 import java.util.Collection;
 import java.util.List;
@@ -51,12 +50,6 @@ abstract class ArrowFlightMixin {
         AbstractArrow arrow = (AbstractArrow) (Object) this;
         if (!(arrow.level() instanceof ServerLevel) || !arrow.isAlive()
                 || !((ArrowAccess) this).bowpack$isManaged()) return;
-        ShotState state = ((ArrowAccess) this).bowpack$getState();
-        if (state != null && state.rainyProjectile()
-                && ((RainyAccess) this).bowpack$isRainyHovering()) {
-            bowpack$slowTicks = 0;
-            return;
-        }
         if (isInGround()) {
             bowpack$slowTicks = 0;
             bowpack$embeddedTicks = arrow.pickup == AbstractArrow.Pickup.DISALLOWED
@@ -102,8 +95,8 @@ abstract class ArrowFlightMixin {
         ShotState state = ((ArrowAccess) this).bowpack$getState();
         if (state != null) {
             if (state.penetrates()) callback.setReturnValue((byte) 1);
-            else if (state.ricochetLevel() > 0 || state.rainyProjectile()) {
-                // Redirects and Rainy shots must not continue a stale piercing sweep.
+            else if (state.ricochetLevel() > 0) {
+                // Redirects must not continue a stale piercing sweep.
                 callback.setReturnValue((byte) 0);
             }
         } else if (((ArrowAccess) this).bowpack$ricochetEnabled()) {

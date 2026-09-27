@@ -39,7 +39,7 @@ public final class ArrowBreakthrough {
             return;
         }
         AbstractArrow branch = arrowItem.createArrow(level, ammo.copyWithCount(1), shooter, weapon.copy());
-        branch.setBaseDamage(((RainyAccess) source).bowpack$getBaseDamage());
+        branch.setBaseDamage(((ArrowAccess) source).bowpack$getBaseDamage());
         branch.setCritArrow(source.isCritArrow());
         branch.setRemainingFireTicks(source.getRemainingFireTicks());
         branch.pickup = AbstractArrow.Pickup.DISALLOWED;

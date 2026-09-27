@@ -35,7 +35,7 @@ public final class ArrowRicochet {
 
     public static @Nullable LivingEntity findFollowTarget(AbstractArrow arrow, double radius) {
         ShotState state = ((ArrowAccess) arrow).bowpack$getState();
-        if (state == null || !state.follow() || state.rainyProjectile()
+        if (state == null || !state.follow()
                 || !(arrow.level() instanceof ServerLevel level)) return null;
         Vec3 position = arrow.position();
         return level.getEntitiesOfClass(LivingEntity.class, new AABB(position, position).inflate(radius),

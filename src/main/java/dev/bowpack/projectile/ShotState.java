@@ -11,9 +11,8 @@ import net.minecraft.core.UUIDUtil;
 
 /** Projectile-owned budgets and hit history survive chunk save/load. */
 public record ShotState(int ricochetLevel, int ricochetsRemaining, int bounces,
-                        boolean antiFriction, boolean breakthrough, boolean follow,
-                        int rainyLevel, boolean rainyProjectile, double launchSpeed,
-                        UUID shooter, Optional<UUID> ignoredEntity, List<UUID> ignoredCompanions,
+                        boolean antiFriction, boolean breakthrough, boolean follow, boolean unstopable,
+                        double launchSpeed, UUID shooter, Optional<UUID> ignoredEntity, List<UUID> ignoredCompanions,
                         List<UUID> piercedTargets, Optional<UUID> apparentAttacker,
                         Optional<Long> expiresAt) {
     public static final Codec<ShotState> CODEC = RecordCodecBuilder.<ShotState>create(instance -> instance.group(
@@ -23,8 +22,7 @@ public record ShotState(int ricochetLevel, int ricochetsRemaining, int bounces,
             Codec.BOOL.fieldOf("anti_friction").forGetter(ShotState::antiFriction),
             Codec.BOOL.fieldOf("breakthrough").forGetter(ShotState::breakthrough),
             Codec.BOOL.fieldOf("follow").forGetter(ShotState::follow),
-            Codec.intRange(0, 3).fieldOf("rainy_level").forGetter(ShotState::rainyLevel),
-            Codec.BOOL.fieldOf("rainy_projectile").forGetter(ShotState::rainyProjectile),
+            Codec.BOOL.optionalFieldOf("unstopable", false).forGetter(ShotState::unstopable),
             Codec.doubleRange(0.00001, 1000).fieldOf("launch_speed").forGetter(ShotState::launchSpeed),
             UUIDUtil.CODEC.fieldOf("shooter").forGetter(ShotState::shooter),
             UUIDUtil.CODEC.optionalFieldOf("ignored_entity").forGetter(ShotState::ignoredEntity),
@@ -42,10 +40,10 @@ public record ShotState(int ricochetLevel, int ricochetsRemaining, int bounces,
     }
 
     public ShotState(int ricochetLevel, int bounces, boolean antiFriction,
-                     boolean breakthrough, int rainyLevel, boolean follow,
+                     boolean breakthrough, boolean follow,
                      double launchSpeed, UUID shooter, Optional<UUID> ignoredEntity) {
         this(ricochetLevel, ricochetBudget(ricochetLevel), bounces, antiFriction,
-                breakthrough, follow, rainyLevel, false, launchSpeed, shooter,
+                breakthrough, follow, false, launchSpeed, shooter,
                 ignoredEntity, List.of(), List.of(), Optional.empty(), Optional.empty());
     }
 
@@ -75,16 +73,11 @@ public record ShotState(int ricochetLevel, int ricochetsRemaining, int bounces,
         if (state.ricochetLevel() != 4 && state.apparentAttacker().isPresent()) {
             return DataResult.error(() -> "Only Ricochet IV can impersonate a previous mob");
         }
-        if (state.rainyProjectile() && (state.rainyLevel() != 0 || state.ricochetLevel() != 0
-                || state.bounces() != 0 || !state.antiFriction() || state.breakthrough()
-                || state.follow() || state.apparentAttacker().isPresent())) {
-            return DataResult.error(() -> "Rainy projectile carries another enchantment effect");
-        }
         return DataResult.success(state);
     }
 
     public boolean canRicochet() {
-        return !rainyProjectile && ricochetLevel > 0 && ricochetsRemaining != 0;
+        return ricochetLevel > 0 && ricochetsRemaining != 0;
     }
 
     public boolean redirectsOnHit() {
@@ -92,7 +85,7 @@ public record ShotState(int ricochetLevel, int ricochetsRemaining, int bounces,
     }
 
     public boolean penetrates() {
-        return breakthrough && !rainyProjectile;
+        return breakthrough;
     }
 
     public double ricochetRadius() {
@@ -107,14 +100,21 @@ public record ShotState(int ricochetLevel, int ricochetsRemaining, int bounces,
 
     public ShotState withDeadline(long deadline) {
         return new ShotState(ricochetLevel, ricochetsRemaining, bounces, antiFriction,
-                breakthrough, follow, rainyLevel, rainyProjectile, launchSpeed, shooter,
+                breakthrough, follow, unstopable, launchSpeed, shooter,
                 ignoredEntity, ignoredCompanions, piercedTargets, apparentAttacker, Optional.of(deadline));
+    }
+
+    public ShotState withUnstopable(boolean enabled) {
+        if (unstopable == enabled) return this;
+        return new ShotState(ricochetLevel, ricochetsRemaining, bounces, antiFriction,
+                breakthrough, follow, enabled, launchSpeed, shooter,
+                ignoredEntity, ignoredCompanions, piercedTargets, apparentAttacker, expiresAt);
     }
 
     public ShotState bounce() {
         if (bounces == 0) throw new IllegalStateException("Arrow has no block bounces remaining");
         return new ShotState(ricochetLevel, ricochetsRemaining, bounces - 1, antiFriction,
-                breakthrough, follow, rainyLevel, rainyProjectile, launchSpeed, shooter,
+                breakthrough, follow, unstopable, launchSpeed, shooter,
                 ignoredEntity, ignoredCompanions, piercedTargets, apparentAttacker, expiresAt);
     }
 
@@ -122,14 +122,14 @@ public record ShotState(int ricochetLevel, int ricochetsRemaining, int bounces,
         if (!canRicochet()) throw new IllegalStateException("Arrow has no Ricochet redirects remaining");
         int remaining = ricochetLevel == 4 ? -1 : ricochetsRemaining - 1;
         return new ShotState(ricochetLevel, remaining, bounces, antiFriction,
-                breakthrough, follow, rainyLevel, rainyProjectile, launchSpeed, shooter,
+                breakthrough, follow, unstopable, launchSpeed, shooter,
                 ignoredEntity, ignoredCompanions, piercedTargets,
                 ricochetLevel == 4 ? hitMob : Optional.empty(), expiresAt);
     }
 
     public ShotState withoutBreakthrough() {
         return new ShotState(ricochetLevel, ricochetsRemaining, bounces, antiFriction,
-                false, follow, rainyLevel, rainyProjectile, launchSpeed, shooter,
+                false, follow, unstopable, launchSpeed, shooter,
                 ignoredEntity, ignoredCompanions, List.of(), apparentAttacker, expiresAt);
     }
 
@@ -138,27 +138,21 @@ public record ShotState(int ricochetLevel, int ricochetsRemaining, int bounces,
         var targets = new ArrayList<>(piercedTargets);
         targets.add(target);
         return new ShotState(ricochetLevel, ricochetsRemaining, bounces, antiFriction,
-                breakthrough, follow, rainyLevel, rainyProjectile, launchSpeed, shooter,
+                breakthrough, follow, unstopable, launchSpeed, shooter,
                 ignoredEntity, ignoredCompanions, targets, apparentAttacker, expiresAt);
     }
 
     public ShotState ignore(Optional<UUID> entity) {
         return new ShotState(ricochetLevel, ricochetsRemaining, bounces, antiFriction,
-                breakthrough, follow, rainyLevel, rainyProjectile, launchSpeed, shooter,
+                breakthrough, follow, unstopable, launchSpeed, shooter,
                 entity, List.of(), piercedTargets, apparentAttacker, expiresAt);
     }
 
     public ShotState ignoreGroup(UUID hit, List<UUID> group) {
         return new ShotState(ricochetLevel, ricochetsRemaining, bounces, antiFriction,
-                breakthrough, follow, rainyLevel, rainyProjectile, launchSpeed, shooter,
+                breakthrough, follow, unstopable, launchSpeed, shooter,
                 Optional.of(hit), group.stream().filter(id -> !id.equals(hit)).toList(),
                 piercedTargets, apparentAttacker, expiresAt);
-    }
-
-    public ShotState asRainyProjectile() {
-        return new ShotState(0, 0, 0, true, false, false, 0, true,
-                launchSpeed, shooter, Optional.empty(), List.of(), List.of(),
-                Optional.empty(), expiresAt);
     }
 
     public boolean ignores(UUID entity) {

@@ -13,8 +13,7 @@ public final class ArrowFollow {
 
     public static void steer(AbstractArrow arrow) {
         ShotState state = ((ArrowAccess) arrow).bowpack$getState();
-        if (!(arrow.level() instanceof ServerLevel) || state == null || !state.follow()
-                || state.rainyProjectile()) return;
+        if (!(arrow.level() instanceof ServerLevel) || state == null || !state.follow()) return;
         Vec3 movement = arrow.getDeltaMovement();
         if (movement.lengthSqr() < 1.0e-8) return;
         LivingEntity target = ArrowRicochet.findFollowTarget(arrow, RANGE);

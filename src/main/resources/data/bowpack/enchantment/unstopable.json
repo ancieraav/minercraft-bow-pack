@@ -1,17 +1,18 @@
 {
   "anvil_cost": 8,
   "description": {
-    "translate": "enchantment.bowpack.rainy_shot"
+    "translate": "enchantment.bowpack.unstopable"
   },
   "effects": {},
+  "exclusive_set": "bowpack:bouncy_shot",
   "max_cost": {
     "base": 50,
-    "per_level_above_first": 10
+    "per_level_above_first": 0
   },
-  "max_level": 3,
+  "max_level": 1,
   "min_cost": {
     "base": 20,
-    "per_level_above_first": 10
+    "per_level_above_first": 0
   },
   "slots": [
     "mainhand",

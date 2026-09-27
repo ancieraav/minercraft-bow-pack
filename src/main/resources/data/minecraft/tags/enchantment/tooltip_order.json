@@ -8,7 +8,7 @@
     "bowpack:bouncy_shot",
     "bowpack:anti_friction_shot",
     "bowpack:breakthrough_shot",
-    "bowpack:rainy_shot",
+    "bowpack:unstopable",
     "bowpack:follow_shot"
   ],
   "fabric:remove": [

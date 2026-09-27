@@ -161,7 +161,7 @@ public class BreakthroughGameTests {
         Arrow arrow = ProjectileFixtures.arrow(test, start, velocity, ricochetLevel, 0, true);
         arrow.setOwner(shooter);
         ((ArrowAccess) arrow).bowpack$setState(new ShotState(ricochetLevel, 0, true,
-                breakthrough, 0, false, velocity.length(), shooter.getUUID(), Optional.empty()));
+                breakthrough, false, velocity.length(), shooter.getUUID(), Optional.empty()));
         arrow.setBaseDamage(0.01);
         return arrow;
     }

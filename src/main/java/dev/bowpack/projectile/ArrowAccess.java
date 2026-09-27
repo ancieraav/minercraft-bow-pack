@@ -5,6 +5,7 @@ import org.jspecify.annotations.Nullable;
 public interface ArrowAccess {
     @Nullable ShotState bowpack$getState();
     void bowpack$setState(@Nullable ShotState state);
+    double bowpack$getBaseDamage();
     boolean bowpack$isManaged();
     boolean bowpack$ricochetEnabled();
     int bowpack$remainingBounces();

@@ -34,7 +34,7 @@ public class LifetimeGameTests {
             Arrow arrow = ProjectileFixtures.arrow(test, new Vec3(4, 2.6, 3),
                     new Vec3(0, 0, 5), 2, 20, true);
             arrow.setOwner(shooter);
-            ShotState expected = new ShotState(2, 20, true, true, 0, false,
+            ShotState expected = new ShotState(2, 20, true, true, false,
                     5, shooter.getUUID(), Optional.empty())
                     .withDeadline(ProjectileFixtures.state(arrow).expiresAt().orElseThrow())
                     .spendRicochet(Optional.empty())

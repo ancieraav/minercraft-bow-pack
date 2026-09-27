@@ -17,7 +17,7 @@ final class AcquisitionFixtures {
             BowEnchantments.BREAKTHROUGH_SHOT, BowEnchantments.FOLLOW_SHOT);
     static final List<ResourceKey<Enchantment>> TREASURE = List.of(
             BowEnchantments.RICOCHET_SHOT, BowEnchantments.ANTI_FRICTION_SHOT,
-            BowEnchantments.RAINY_SHOT);
+            BowEnchantments.UNSTOPABLE);
 
     private AcquisitionFixtures() {}
 

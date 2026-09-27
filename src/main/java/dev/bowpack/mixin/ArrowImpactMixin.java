@@ -7,7 +7,7 @@ import dev.bowpack.math.ShotVector;
 import dev.bowpack.projectile.ArrowAccess;
 import dev.bowpack.projectile.ArrowBreakthrough;
 import dev.bowpack.projectile.ArrowRicochet;
-import dev.bowpack.projectile.RainyShot;
+import dev.bowpack.projectile.ArrowUnstopable;
 import dev.bowpack.projectile.ShotState;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import java.util.List;
@@ -69,7 +69,6 @@ abstract class ArrowImpactMixin {
         }
         if (!damaged || !(entity instanceof LivingEntity victim) || state == null
                 || !(arrow.level() instanceof ServerLevel level)) return damaged;
-        if (!state.rainyProjectile()) RainyShot.onHit(arrow, victim);
         if (state.ricochetLevel() == 4 && victim instanceof Mob mob
                 && state.apparentAttacker().isPresent()
                 && level.getEntity(state.apparentAttacker().get()) instanceof Mob apparent) {
@@ -120,9 +119,19 @@ abstract class ArrowImpactMixin {
     }
 
     @Inject(method = "onHitBlock", at = @At("HEAD"), cancellable = true)
-    private void bowpack$reflect(BlockHitResult hit, CallbackInfo callback) {
+    private void bowpack$blockImpact(BlockHitResult hit, CallbackInfo callback) {
         AbstractArrow arrow = (AbstractArrow) (Object) this;
         ArrowAccess access = (ArrowAccess) this;
+        ShotState state = access.bowpack$getState();
+        if (state != null && state.unstopable() && arrow.level() instanceof ServerLevel level
+                && ArrowUnstopable.tryBreak(arrow, hit, level.getBlockState(hit.getBlockPos()))) {
+                setInGround(false);
+                arrow.shakeTime = 0;
+                arrow.setPos(hit.getLocation().add(arrow.getDeltaMovement().normalize().scale(0.01)));
+                arrow.needsSync = true;
+                callback.cancel();
+                return;
+        }
         if (access.bowpack$remainingBounces() == 0) return;
         Vec3 velocity = arrow.getDeltaMovement();
         var normal = hit.getDirection().getUnitVec3i();

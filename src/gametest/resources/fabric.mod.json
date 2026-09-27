@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "bowpack-gametest",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "name": "Bow Pack Game Tests",
   "environment": "*",
   "entrypoints": {
@@ -19,9 +19,11 @@
       "dev.bowpack.gametest.AcquisitionGameTests",
       "dev.bowpack.gametest.LootAcquisitionGameTests",
       "dev.bowpack.gametest.FollowPhysicsGameTests",
-      "dev.bowpack.gametest.RainyShotGameTests",
-      "dev.bowpack.gametest.RainySaveGameTests",
-      "dev.bowpack.gametest.BreakthroughGameTests"
+      "dev.bowpack.gametest.LegacyShotStateGameTests",
+      "dev.bowpack.gametest.LegacyEnchantmentGameTests",
+      "dev.bowpack.gametest.BreakthroughGameTests",
+      "dev.bowpack.gametest.MendingInfinityGameTests",
+      "dev.bowpack.gametest.UnstopableGameTests"
     ]
   },
   "depends": { "bowpack": "*", "fabric-gametest-api-v1": "*" }

@@ -3,6 +3,7 @@ package dev.bowpack.gametest;
 import dev.bowpack.BowEnchantments;
 import dev.bowpack.projectile.ArrowAccess;
 import dev.bowpack.projectile.ShotState;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.core.HolderLookup;
@@ -25,7 +26,11 @@ final class ProjectileFixtures {
     static ItemStack maxWeapon(Item item, HolderLookup.Provider registries) {
         ItemStack weapon = new ItemStack(item);
         var enchantments = registries.lookupOrThrow(Registries.ENCHANTMENT);
-        for (var key : BowEnchantments.ALL) {
+        for (var key : List.of(BowEnchantments.MULTI_SHOT, BowEnchantments.FRONT_SHOT,
+                BowEnchantments.BACK_SHOT, BowEnchantments.DIAGONAL_SHOT,
+                BowEnchantments.RICOCHET_SHOT, BowEnchantments.BOUNCY_SHOT,
+                BowEnchantments.ANTI_FRICTION_SHOT, BowEnchantments.BREAKTHROUGH_SHOT,
+                BowEnchantments.FOLLOW_SHOT)) {
             var enchantment = enchantments.getOrThrow(key);
             weapon.enchant(enchantment, enchantment.value().getMaxLevel());
         }
@@ -48,7 +53,7 @@ final class ProjectileFixtures {
         Arrow arrow = new Arrow(test.getLevel(), absolute.x, absolute.y, absolute.z,
                 new ItemStack(Items.ARROW), new ItemStack(Items.BOW));
         ((ArrowAccess) arrow).bowpack$setState(new ShotState(
-                ricochetLevel, bounces, antiFriction, false, 0, false,
+                ricochetLevel, bounces, antiFriction, false, false,
                 velocity.length(), UUID.randomUUID(), Optional.empty()));
         arrow.setNoGravity(antiFriction);
         arrow.setDeltaMovement(velocity);

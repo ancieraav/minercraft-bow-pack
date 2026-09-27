@@ -128,7 +128,7 @@ public class RicochetGameTests {
         Arrow arrow = ProjectileFixtures.arrow(test, new Vec3(4, 3.5, 3),
                 new Vec3(0, 0, 3), true, 0, false);
         arrow.setOwner(owner);
-        ((ArrowAccess) arrow).bowpack$setState(new ShotState(4, 0, false, false, 0, false,
+        ((ArrowAccess) arrow).bowpack$setState(new ShotState(4, 0, false, false, false,
                 3, owner.getUUID(), Optional.empty()));
         test.assertTrue(ArrowRicochet.findTarget(arrow, List.of(hit.getUUID()), hit.position()) == target,
                 "The nearby owner is excluded while a survival player is a valid next target");

@@ -26,8 +26,9 @@ public final class ShotExpansion {
         var pattern = ShotPattern.generate(new ShotVector(launchVelocity.x, launchVelocity.y, launchVelocity.z),
                 speed, yaw, levels.multi(), levels.front(), levels.diagonal(), levels.back());
         ShotState state = new ShotState(levels.ricochet(), levels.bouncy() * 10,
-                levels.antiFriction(), levels.breakthrough(), levels.rainy(), levels.follow(),
+                levels.antiFriction(), levels.breakthrough(), levels.follow(),
                 speed, shooter.getUUID(), Optional.empty())
+                .withUnstopable(levels.unstopable())
                 .withDeadline(ArrowLifetime.deadline(level));
         for (int index = 0; index < pattern.size(); index++) {
             var shot = pattern.get(index);

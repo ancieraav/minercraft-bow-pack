@@ -90,13 +90,13 @@ public class AcquisitionGameTests {
     }
 
     @GameTest(structure = ProjectileFixtures.ARENA)
-    public void nativeGrindstoneRemovesAllTenEnchantments(GameTestHelper test) {
+    public void nativeGrindstoneRemovesNineCompatibleEnchantments(GameTestHelper test) {
         var player = BookAccessGameTests.player(test);
         try {
             for (var item : List.of(Items.ENCHANTED_BOOK, Items.BOW, Items.CROSSBOW)) {
                 ItemStack enchanted = ProjectileFixtures.maxWeapon(item, test.getLevel().registryAccess());
-                test.assertValueEqual(EnchantmentHelper.getEnchantmentsForCrafting(enchanted).size(), 10,
-                        "The grindstone input must contain all ten enchantments");
+                test.assertValueEqual(EnchantmentHelper.getEnchantmentsForCrafting(enchanted).size(), 9,
+                        "The grindstone input must contain nine compatible enchantments");
                 GrindstoneMenu menu = new GrindstoneMenu(1, player.getInventory());
                 menu.getSlot(GrindstoneMenu.INPUT_SLOT).set(enchanted);
                 ItemStack result = menu.getSlot(GrindstoneMenu.RESULT_SLOT).safeTake(1, 1, player);

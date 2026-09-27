@@ -12,6 +12,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractArrow.class)
 abstract class ArrowStateMixin implements ArrowAccess {
+    @Shadow private double baseDamage;
     @Unique private static final EntityDataAccessor<Integer> BOWPACK_SHOT_FLAGS =
             SynchedEntityData.defineId(AbstractArrow.class, EntityDataSerializers.INT);
     @Unique private static final int BOWPACK_MANAGED = 1;
@@ -27,6 +29,8 @@ abstract class ArrowStateMixin implements ArrowAccess {
     @Unique private @Nullable ShotState bowpack$state;
 
     public @Nullable ShotState bowpack$getState() { return bowpack$state; }
+
+    public double bowpack$getBaseDamage() { return baseDamage; }
 
     public void bowpack$setState(@Nullable ShotState state) {
         AbstractArrow arrow = (AbstractArrow) (Object) this;
@@ -82,20 +86,28 @@ abstract class ArrowStateMixin implements ArrowAccess {
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     private void bowpack$load(ValueInput input, CallbackInfo callback) {
+        ValueInput shot = input.childOrEmpty("bowpack:shot");
+        var legacyGenerated = shot.read("rainy_projectile", Codec.BOOL);
+        if (legacyGenerated.orElse(false)
+                || shot.read("rainy_projectile", Codec.PASSTHROUGH).isPresent() && legacyGenerated.isEmpty()
+                || input.read("bowpack:rain_target", Codec.PASSTHROUGH).isPresent()
+                || input.read("bowpack:rain_release", Codec.PASSTHROUGH).isPresent()) {
+            ArrowLifetime.discardInvalid((AbstractArrow) (Object) this, "legacy Rainy projectile");
+            return;
+        }
         var saved = input.read("bowpack:shot", ShotState.CODEC);
         if (saved.isEmpty() && input.read("bowpack:shot", Codec.PASSTHROUGH).isPresent()) {
             ArrowLifetime.discardInvalid((AbstractArrow) (Object) this, "saved shot state cannot be decoded");
             return;
         }
         if (saved.isPresent() && saved.get().expiresAt().isEmpty()
-                && input.childOrEmpty("bowpack:shot").read("expires_at", Codec.PASSTHROUGH).isPresent()) {
+                && shot.read("expires_at", Codec.PASSTHROUGH).isPresent()) {
             ArrowLifetime.discardInvalid((AbstractArrow) (Object) this, "saved deadline cannot be decoded");
             return;
         }
         bowpack$setState(saved.orElse(null));
         if (bowpack$state != null) {
-            ((AbstractArrow) (Object) this).setNoGravity(
-                    bowpack$state.antiFriction() || bowpack$state.rainyProjectile());
+            ((AbstractArrow) (Object) this).setNoGravity(bowpack$state.antiFriction());
         }
     }
 }
