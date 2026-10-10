@@ -14,7 +14,7 @@ public record ShotState(int ricochetLevel, int ricochetsRemaining, int bounces,
                         boolean antiFriction, boolean breakthrough, boolean follow, boolean unstopable,
                         double launchSpeed, UUID shooter, Optional<UUID> ignoredEntity, List<UUID> ignoredCompanions,
                         List<UUID> piercedTargets, Optional<UUID> apparentAttacker,
-                        Optional<Long> expiresAt) {
+                        Optional<Long> expiresAt, int accelerateLevel) {
     public static final Codec<ShotState> CODEC = RecordCodecBuilder.<ShotState>create(instance -> instance.group(
             Codec.intRange(0, 4).fieldOf("ricochet_level").forGetter(ShotState::ricochetLevel),
             Codec.intRange(-1, 10).fieldOf("ricochets_remaining").forGetter(ShotState::ricochetsRemaining),
@@ -31,7 +31,8 @@ public record ShotState(int ricochetLevel, int ricochetsRemaining, int bounces,
             UUIDUtil.CODEC.listOf().optionalFieldOf("pierced_targets", List.of())
                     .forGetter(ShotState::piercedTargets),
             UUIDUtil.CODEC.optionalFieldOf("apparent_attacker").forGetter(ShotState::apparentAttacker),
-            Codec.LONG.optionalFieldOf("expires_at").forGetter(ShotState::expiresAt)
+            Codec.LONG.optionalFieldOf("expires_at").forGetter(ShotState::expiresAt),
+            Codec.intRange(0, 3).optionalFieldOf("accelerate_level", 0).forGetter(ShotState::accelerateLevel)
     ).apply(instance, ShotState::new)).validate(ShotState::validate);
 
     public ShotState {
@@ -44,7 +45,7 @@ public record ShotState(int ricochetLevel, int ricochetsRemaining, int bounces,
                      double launchSpeed, UUID shooter, Optional<UUID> ignoredEntity) {
         this(ricochetLevel, ricochetBudget(ricochetLevel), bounces, antiFriction,
                 breakthrough, follow, false, launchSpeed, shooter,
-                ignoredEntity, List.of(), List.of(), Optional.empty(), Optional.empty());
+                ignoredEntity, List.of(), List.of(), Optional.empty(), Optional.empty(), 0);
     }
 
     private static int ricochetBudget(int level) {
@@ -101,21 +102,29 @@ public record ShotState(int ricochetLevel, int ricochetsRemaining, int bounces,
     public ShotState withDeadline(long deadline) {
         return new ShotState(ricochetLevel, ricochetsRemaining, bounces, antiFriction,
                 breakthrough, follow, unstopable, launchSpeed, shooter,
-                ignoredEntity, ignoredCompanions, piercedTargets, apparentAttacker, Optional.of(deadline));
+                ignoredEntity, ignoredCompanions, piercedTargets, apparentAttacker, Optional.of(deadline), accelerateLevel);
     }
 
     public ShotState withUnstopable(boolean enabled) {
         if (unstopable == enabled) return this;
         return new ShotState(ricochetLevel, ricochetsRemaining, bounces, antiFriction,
                 breakthrough, follow, enabled, launchSpeed, shooter,
-                ignoredEntity, ignoredCompanions, piercedTargets, apparentAttacker, expiresAt);
+                ignoredEntity, ignoredCompanions, piercedTargets, apparentAttacker, expiresAt, accelerateLevel);
+    }
+
+    public ShotState withAccelerate(int level) {
+        if (level < 0 || level > 3) throw new IllegalArgumentException("Unsupported Accelerate level: " + level);
+        if (accelerateLevel == level) return this;
+        return new ShotState(ricochetLevel, ricochetsRemaining, bounces, antiFriction,
+                breakthrough, follow, unstopable, launchSpeed, shooter,
+                ignoredEntity, ignoredCompanions, piercedTargets, apparentAttacker, expiresAt, level);
     }
 
     public ShotState bounce() {
         if (bounces == 0) throw new IllegalStateException("Arrow has no block bounces remaining");
         return new ShotState(ricochetLevel, ricochetsRemaining, bounces - 1, antiFriction,
                 breakthrough, follow, unstopable, launchSpeed, shooter,
-                ignoredEntity, ignoredCompanions, piercedTargets, apparentAttacker, expiresAt);
+                ignoredEntity, ignoredCompanions, piercedTargets, apparentAttacker, expiresAt, accelerateLevel);
     }
 
     public ShotState spendRicochet(Optional<UUID> hitMob) {
@@ -124,13 +133,13 @@ public record ShotState(int ricochetLevel, int ricochetsRemaining, int bounces,
         return new ShotState(ricochetLevel, remaining, bounces, antiFriction,
                 breakthrough, follow, unstopable, launchSpeed, shooter,
                 ignoredEntity, ignoredCompanions, piercedTargets,
-                ricochetLevel == 4 ? hitMob : Optional.empty(), expiresAt);
+                ricochetLevel == 4 ? hitMob : Optional.empty(), expiresAt, accelerateLevel);
     }
 
     public ShotState withoutBreakthrough() {
         return new ShotState(ricochetLevel, ricochetsRemaining, bounces, antiFriction,
                 false, follow, unstopable, launchSpeed, shooter,
-                ignoredEntity, ignoredCompanions, List.of(), apparentAttacker, expiresAt);
+                ignoredEntity, ignoredCompanions, List.of(), apparentAttacker, expiresAt, accelerateLevel);
     }
 
     public ShotState pierce(UUID target) {
@@ -139,20 +148,20 @@ public record ShotState(int ricochetLevel, int ricochetsRemaining, int bounces,
         targets.add(target);
         return new ShotState(ricochetLevel, ricochetsRemaining, bounces, antiFriction,
                 breakthrough, follow, unstopable, launchSpeed, shooter,
-                ignoredEntity, ignoredCompanions, targets, apparentAttacker, expiresAt);
+                ignoredEntity, ignoredCompanions, targets, apparentAttacker, expiresAt, accelerateLevel);
     }
 
     public ShotState ignore(Optional<UUID> entity) {
         return new ShotState(ricochetLevel, ricochetsRemaining, bounces, antiFriction,
                 breakthrough, follow, unstopable, launchSpeed, shooter,
-                entity, List.of(), piercedTargets, apparentAttacker, expiresAt);
+                entity, List.of(), piercedTargets, apparentAttacker, expiresAt, accelerateLevel);
     }
 
     public ShotState ignoreGroup(UUID hit, List<UUID> group) {
         return new ShotState(ricochetLevel, ricochetsRemaining, bounces, antiFriction,
                 breakthrough, follow, unstopable, launchSpeed, shooter,
                 Optional.of(hit), group.stream().filter(id -> !id.equals(hit)).toList(),
-                piercedTargets, apparentAttacker, expiresAt);
+                piercedTargets, apparentAttacker, expiresAt, accelerateLevel);
     }
 
     public boolean ignores(UUID entity) {

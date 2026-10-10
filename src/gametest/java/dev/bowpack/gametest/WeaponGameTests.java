@@ -157,9 +157,15 @@ public class WeaponGameTests {
                     "A Breakthrough arrow is managed but continues straight instead of redirecting itself");
             test.assertValueEqual(synced.bowpack$remainingBounces(), 30,
                     "Synced entity state carries every arrow's bounce budget");
+            test.assertValueEqual(synced.bowpack$accelerateLevel(), 3,
+                    "Synced entity state carries Accelerate III for client flight");
+            test.assertTrue(synced.bowpack$unstopableEnabled(),
+                    "Synced entity state prevents client Bouncy prediction for Unstopable");
             test.assertTrue(state.ricochetLevel() == 4 && state.antiFriction() && state.breakthrough(),
                     "Every arrow inherits Ricochet, Anti Friction, and Breakthrough");
             test.assertValueEqual(state.bounces(), 30, "Every arrow has thirty block bounces");
+            test.assertTrue(state.unstopable() && state.follow(), "Every arrow inherits Unstopable and Follow");
+            test.assertValueEqual(state.accelerateLevel(), 3, "Every arrow inherits Accelerate III");
             test.assertValueEqual(state.shooter(), player.getUUID(), "Every arrow retains its shooter");
             test.assertTrue(arrow.isNoGravity(), "Anti Friction applies to every arrow");
             ProjectileFixtures.near(test, speed, arrow.getDeltaMovement().length(), "Equal launch speed");

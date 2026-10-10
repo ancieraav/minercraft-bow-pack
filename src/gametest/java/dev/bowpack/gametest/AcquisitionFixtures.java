@@ -14,7 +14,7 @@ final class AcquisitionFixtures {
     static final List<ResourceKey<Enchantment>> NORMAL = List.of(
             BowEnchantments.MULTI_SHOT, BowEnchantments.FRONT_SHOT, BowEnchantments.BACK_SHOT,
             BowEnchantments.DIAGONAL_SHOT, BowEnchantments.BOUNCY_SHOT,
-            BowEnchantments.BREAKTHROUGH_SHOT, BowEnchantments.FOLLOW_SHOT);
+            BowEnchantments.BREAKTHROUGH_SHOT, BowEnchantments.FOLLOW_SHOT, BowEnchantments.ACCELERATE);
     static final List<ResourceKey<Enchantment>> TREASURE = List.of(
             BowEnchantments.RICOCHET_SHOT, BowEnchantments.ANTI_FRICTION_SHOT,
             BowEnchantments.UNSTOPABLE);

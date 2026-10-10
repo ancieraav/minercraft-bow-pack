@@ -17,7 +17,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.arrow.Arrow;
-import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,6 +29,7 @@ import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
 public class UnstopableGameTests {
     private static final BlockPos FIRST = new BlockPos(32, 4, 32);
@@ -57,7 +57,7 @@ public class UnstopableGameTests {
     }
 
     @GameTest(structure = ProjectileFixtures.ARENA)
-    public void bouncyAndUnstopableCannotCombineInEitherOrder(GameTestHelper test)
+    public void bouncyAndUnstopableCombineInEitherOrder(GameTestHelper test)
             throws CommandSyntaxException {
         ServerPlayer player = BookAccessGameTests.player(test);
         player.giveExperienceLevels(100);
@@ -70,12 +70,13 @@ public class UnstopableGameTests {
                     ItemStack weapon = BookAccessGameTests.combine(test, player, new ItemStack(item),
                             BookAccessGameTests.giveBook(test, player, first, 1));
                     ItemStack book = BookAccessGameTests.giveBook(test, player, second, 1);
-                    AnvilMenu menu = new AnvilMenu(1, player.getInventory());
-                    menu.getSlot(AnvilMenu.INPUT_SLOT).set(weapon);
-                    menu.getSlot(AnvilMenu.ADDITIONAL_SLOT).set(book);
-                    menu.createResult();
-                    test.assertTrue(menu.getSlot(AnvilMenu.RESULT_SLOT).getItem().isEmpty(),
-                            "The anvil must reject Bouncy and Unstopable in either order");
+                    ItemStack combined = BookAccessGameTests.combine(test, player, weapon, book);
+                    var enchantments = test.getLevel().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+                    for (var key : List.of(first, second)) {
+                        test.assertValueEqual(EnchantmentHelper.getItemEnchantmentLevel(
+                                        enchantments.getOrThrow(key), combined), 1,
+                                "The anvil preserves both Unstopable and Bouncy in either order");
+                    }
                 }
             }
             test.succeed();
@@ -185,12 +186,16 @@ public class UnstopableGameTests {
         test.succeed();
     }
 
-    private static Arrow arrow(GameTestHelper test, Entity owner) {
+    static Arrow arrow(GameTestHelper test, Entity owner) {
+        return arrow(test, owner, 0);
+    }
+
+    static Arrow arrow(GameTestHelper test, Entity owner, int bounces) {
         Vec3 velocity = new Vec3(2, 0, 0);
         Arrow arrow = ProjectileFixtures.arrow(test, new Vec3(2.5, 4.5, 4.5),
                 velocity, false, 0, true);
         arrow.setOwner(owner);
-        ((ArrowAccess) arrow).bowpack$setState(new ShotState(0, 0, true,
+        ((ArrowAccess) arrow).bowpack$setState(new ShotState(0, bounces, true,
                 false, false, velocity.length(), owner.getUUID(), Optional.empty())
                 .withUnstopable(true));
         return arrow;

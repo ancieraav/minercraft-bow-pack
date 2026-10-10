@@ -29,6 +29,7 @@ public final class ShotExpansion {
                 levels.antiFriction(), levels.breakthrough(), levels.follow(),
                 speed, shooter.getUUID(), Optional.empty())
                 .withUnstopable(levels.unstopable())
+                .withAccelerate(levels.accelerateLevel())
                 .withDeadline(ArrowLifetime.deadline(level));
         for (int index = 0; index < pattern.size(); index++) {
             var shot = pattern.get(index);

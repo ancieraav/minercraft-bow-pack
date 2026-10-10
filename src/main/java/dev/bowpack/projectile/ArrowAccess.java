@@ -8,6 +8,9 @@ public interface ArrowAccess {
     double bowpack$getBaseDamage();
     boolean bowpack$isManaged();
     boolean bowpack$ricochetEnabled();
+    boolean bowpack$unstopableEnabled();
+    boolean bowpack$antiFrictionEnabled();
+    int bowpack$accelerateLevel();
     int bowpack$remainingBounces();
     void bowpack$spendBounce();
 }

@@ -9,7 +9,8 @@
     "bowpack:anti_friction_shot",
     "bowpack:breakthrough_shot",
     "bowpack:unstopable",
-    "bowpack:follow_shot"
+    "bowpack:follow_shot",
+    "bowpack:accelerate"
   ],
   "fabric:remove": [
     "minecraft:multishot"

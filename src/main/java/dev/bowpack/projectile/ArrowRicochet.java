@@ -63,9 +63,11 @@ public final class ArrowRicochet {
         ShotState state = ((ArrowAccess) arrow).bowpack$getState();
         if (state == null) throw new IllegalStateException("Cannot redirect an unmanaged arrow");
         Vec3 direction = target.getBoundingBox().getCenter().subtract(impact).normalize();
+        double speed = state.accelerateLevel() > 0 ? arrow.getDeltaMovement().length() : state.launchSpeed();
         arrow.setPos(impact);
         // Aim once. Normal gravity/drag can make this shot fall short of the target.
-        arrow.shoot(direction.x, direction.y, direction.z, (float) state.launchSpeed(), 0);
+        arrow.shoot(direction.x, direction.y, direction.z, (float) speed, 0);
+        if (state.accelerateLevel() > 0) arrow.setDeltaMovement(direction.scale(speed));
         arrow.setNoGravity(state.antiFriction());
         arrow.needsSync = true;
     }

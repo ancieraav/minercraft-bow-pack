@@ -29,6 +29,8 @@ public class AmmunitionGameTests {
                         poison, "Every additional projectile retains its potion payload");
                 test.assertValueEqual(ProjectileFixtures.state(arrow).ricochetLevel(), 4,
                         "Every copy retains Ricochet IV");
+                test.assertValueEqual(ProjectileFixtures.state(arrow).accelerateLevel(), 3,
+                        "Every tipped arrow copy inherits Accelerate III");
                 arrow.discard();
             }
         }
@@ -48,6 +50,8 @@ public class AmmunitionGameTests {
                         "Every copy inherits Anti Friction");
                 test.assertValueEqual(ProjectileFixtures.state(arrow).bounces(), 30,
                         "Every copy inherits Bouncy III");
+                test.assertValueEqual(ProjectileFixtures.state(arrow).accelerateLevel(), 3,
+                        "Every spectral arrow copy inherits Accelerate III");
                 arrow.discard();
             }
         }

@@ -48,6 +48,7 @@ public final class ArrowBreakthrough {
         ShotState branchState = state.withoutBreakthrough().spendRicochet(apparent)
                 .ignoreGroup(hit.getUUID(), hitGroup);
         ((ArrowAccess) branch).bowpack$setState(branchState);
+        branch.setDeltaMovement(source.getDeltaMovement());
         ArrowRicochet.redirect(branch, target, impact);
         Projectile.spawnProjectile(branch, level, ammo.copyWithCount(1));
     }

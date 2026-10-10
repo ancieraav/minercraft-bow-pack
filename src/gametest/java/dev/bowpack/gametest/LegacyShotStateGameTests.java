@@ -18,10 +18,13 @@ public class LegacyShotStateGameTests {
         var expected = ProjectileFixtures.state(arrow);
         CompoundTag oldData = save(test, arrow);
         var shot = oldData.getCompound("bowpack:shot").orElseThrow();
+        shot.remove("accelerate_level");
         shot.putInt("rainy_level", 3);
         shot.putBoolean("rainy_projectile", false);
         Arrow restored = load(test, oldData);
         test.assertTrue(restored.isAlive(), "An ordinary saved arrow must still load");
+        test.assertValueEqual(ProjectileFixtures.state(restored).accelerateLevel(), 0,
+                "Saved arrows predating Accelerate must retain ordinary flight");
         test.assertValueEqual(ProjectileFixtures.state(restored), expected,
                 "Old Rainy level must have no effect on a regular arrow");
         CompoundTag migrated = save(test, restored).getCompound("bowpack:shot").orElseThrow();

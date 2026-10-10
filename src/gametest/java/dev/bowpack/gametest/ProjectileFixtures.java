@@ -3,7 +3,6 @@ package dev.bowpack.gametest;
 import dev.bowpack.BowEnchantments;
 import dev.bowpack.projectile.ArrowAccess;
 import dev.bowpack.projectile.ShotState;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.core.HolderLookup;
@@ -26,11 +25,7 @@ final class ProjectileFixtures {
     static ItemStack maxWeapon(Item item, HolderLookup.Provider registries) {
         ItemStack weapon = new ItemStack(item);
         var enchantments = registries.lookupOrThrow(Registries.ENCHANTMENT);
-        for (var key : List.of(BowEnchantments.MULTI_SHOT, BowEnchantments.FRONT_SHOT,
-                BowEnchantments.BACK_SHOT, BowEnchantments.DIAGONAL_SHOT,
-                BowEnchantments.RICOCHET_SHOT, BowEnchantments.BOUNCY_SHOT,
-                BowEnchantments.ANTI_FRICTION_SHOT, BowEnchantments.BREAKTHROUGH_SHOT,
-                BowEnchantments.FOLLOW_SHOT)) {
+        for (var key : BowEnchantments.ALL) {
             var enchantment = enchantments.getOrThrow(key);
             weapon.enchant(enchantment, enchantment.value().getMaxLevel());
         }

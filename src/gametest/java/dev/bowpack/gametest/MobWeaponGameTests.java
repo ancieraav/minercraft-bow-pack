@@ -85,7 +85,8 @@ public class MobWeaponGameTests {
         ItemStack weapon = new ItemStack(item);
         var enchantments = test.getLevel().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
         for (var key : List.of(BowEnchantments.MULTI_SHOT, BowEnchantments.FRONT_SHOT,
-                BowEnchantments.BACK_SHOT, BowEnchantments.DIAGONAL_SHOT, BowEnchantments.BOUNCY_SHOT)) {
+                BowEnchantments.BACK_SHOT, BowEnchantments.DIAGONAL_SHOT, BowEnchantments.BOUNCY_SHOT,
+                BowEnchantments.ACCELERATE)) {
             var enchantment = enchantments.getOrThrow(key);
             weapon.enchant(enchantment, enchantment.value().getMaxLevel());
         }
@@ -109,10 +110,14 @@ public class MobWeaponGameTests {
             var state = ProjectileFixtures.state(arrow);
             test.assertValueEqual(state.shooter(), shooter.getUUID(), "Every copy retains its actual mob owner");
             test.assertValueEqual(state.bounces(), 30, "Every copy inherits the native weapon's Bouncy level");
+            test.assertValueEqual(state.accelerateLevel(), 3, "Every mob arrow inherits Accelerate III");
             ProjectileFixtures.near(test, launch.length(), arrow.getDeltaMovement().length(),
                     "All directions preserve the native shot's launch speed");
             ProjectileFixtures.near(test, launch.length(), state.launchSpeed(), "Ricochet state preserves native speed");
             test.assertFalse(arrow.isNoGravity(), "Normal enchantments do not remove gravity");
+            arrow.tick();
+            ProjectileFixtures.near(test, launch.length() + 0.2, arrow.getDeltaMovement().length(),
+                    "Every mob arrow accelerates from its native launch speed after one tick");
         }
     }
 

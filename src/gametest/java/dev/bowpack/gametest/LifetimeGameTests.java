@@ -196,7 +196,7 @@ public class LifetimeGameTests {
         List<Arrow> arrows = test.getEntities(EntityTypes.ARROW);
         test.assertValueEqual(arrows.size(), 1600, "Twenty native maximum volleys create 1600 real projectiles");
         test.assertValueEqual(player.getOffhandItem().getCount(), 12, "Twenty volleys use only twenty ammo");
-        arrows.forEach(arrow -> arrow.setDeltaMovement(new Vec3(0.001, 0, 0)));
+        arrows.forEach(arrow -> arrow.setDeltaMovement(Vec3.ZERO));
         for (int tick = 0; tick < 39; tick++) arrows.forEach(Arrow::tick);
         test.assertValueEqual(arrows.stream().filter(Arrow::isAlive).count(), 1600L,
                 "Stress entities must remain real projectiles until the cleanup threshold");

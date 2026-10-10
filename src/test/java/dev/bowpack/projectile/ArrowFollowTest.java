@@ -23,4 +23,22 @@ class ArrowFollowTest {
         Vec3 desired = new Vec3(0.1, 0, 1).normalize();
         assertEquals(desired, ArrowFollow.turnToward(forward, desired, ArrowFollow.MAX_TURN_RADIANS));
     }
+
+    @Test
+    void verticalRearTargetStillHasAStableTurnPlane() {
+        Vec3 current = new Vec3(0, 1, 0);
+        Vec3 desired = new Vec3(0, -1, 0);
+        Vec3 next = ArrowFollow.turnToward(current, desired, ArrowFollow.MAX_TURN_RADIANS);
+        assertEquals(1, next.length(), 1.0e-12);
+        assertEquals(10, Math.toDegrees(Math.acos(current.dot(next))), 1.0e-9);
+        assertTrue(next.dot(desired) > current.dot(desired));
+    }
+
+    @Test
+    void alignedDirectionAndUnlimitedTurnStayExact() {
+        Vec3 current = new Vec3(1, 0, 0);
+        assertEquals(current, ArrowFollow.turnToward(current, current, ArrowFollow.MAX_TURN_RADIANS));
+        Vec3 desired = new Vec3(0, 0, -1);
+        assertEquals(desired, ArrowFollow.turnToward(current, desired, Math.PI));
+    }
 }

@@ -6,7 +6,8 @@
     "bowpack:diagonal_shot",
     "bowpack:bouncy_shot",
     "bowpack:breakthrough_shot",
-    "bowpack:follow_shot"
+    "bowpack:follow_shot",
+    "bowpack:accelerate"
   ],
   "fabric:remove": [
     "minecraft:multishot"

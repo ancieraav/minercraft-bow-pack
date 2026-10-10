@@ -27,7 +27,8 @@ public class AcquisitionGameTests {
                 new Threshold(BowEnchantments.DIAGONAL_SHOT, List.of(10, 20, 30)),
                 new Threshold(BowEnchantments.BOUNCY_SHOT, List.of(5, 15, 25)),
                 new Threshold(BowEnchantments.BREAKTHROUGH_SHOT, List.of(10)),
-                new Threshold(BowEnchantments.FOLLOW_SHOT, List.of(10)));
+                new Threshold(BowEnchantments.FOLLOW_SHOT, List.of(10)),
+                new Threshold(BowEnchantments.ACCELERATE, List.of(5, 15, 25)));
         for (var item : List.of(Items.BOOK, Items.BOW, Items.CROSSBOW)) {
             ItemStack stack = new ItemStack(item);
             for (var spec : thresholds) {
@@ -90,13 +91,13 @@ public class AcquisitionGameTests {
     }
 
     @GameTest(structure = ProjectileFixtures.ARENA)
-    public void nativeGrindstoneRemovesNineCompatibleEnchantments(GameTestHelper test) {
+    public void nativeGrindstoneRemovesAllElevenEnchantments(GameTestHelper test) {
         var player = BookAccessGameTests.player(test);
         try {
             for (var item : List.of(Items.ENCHANTED_BOOK, Items.BOW, Items.CROSSBOW)) {
                 ItemStack enchanted = ProjectileFixtures.maxWeapon(item, test.getLevel().registryAccess());
-                test.assertValueEqual(EnchantmentHelper.getEnchantmentsForCrafting(enchanted).size(), 9,
-                        "The grindstone input must contain nine compatible enchantments");
+                test.assertValueEqual(EnchantmentHelper.getEnchantmentsForCrafting(enchanted).size(), 11,
+                        "The grindstone input must contain all eleven enchantments");
                 GrindstoneMenu menu = new GrindstoneMenu(1, player.getInventory());
                 menu.getSlot(GrindstoneMenu.INPUT_SLOT).set(enchanted);
                 ItemStack result = menu.getSlot(GrindstoneMenu.RESULT_SLOT).safeTake(1, 1, player);

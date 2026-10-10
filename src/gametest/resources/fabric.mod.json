@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "bowpack-gametest",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "name": "Bow Pack Game Tests",
   "environment": "*",
   "entrypoints": {
@@ -23,7 +23,13 @@
       "dev.bowpack.gametest.LegacyEnchantmentGameTests",
       "dev.bowpack.gametest.BreakthroughGameTests",
       "dev.bowpack.gametest.MendingInfinityGameTests",
-      "dev.bowpack.gametest.UnstopableGameTests"
+      "dev.bowpack.gametest.UnstopableGameTests",
+      "dev.bowpack.gametest.UnstopableImpactGameTests",
+      "dev.bowpack.gametest.UnstopableEffectsGameTests",
+      "dev.bowpack.gametest.AccelerateFlightGameTests",
+      "dev.bowpack.gametest.AccelerateImpactGameTests",
+      "dev.bowpack.gametest.AccelerateWeaponGameTests",
+      "dev.bowpack.gametest.AccelerateCombinationGameTests"
     ]
   },
   "depends": { "bowpack": "*", "fabric-gametest-api-v1": "*" }

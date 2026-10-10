@@ -15,20 +15,24 @@ public final class ArrowFollow {
         ShotState state = ((ArrowAccess) arrow).bowpack$getState();
         if (!(arrow.level() instanceof ServerLevel) || state == null || !state.follow()) return;
         Vec3 movement = arrow.getDeltaMovement();
-        if (movement.lengthSqr() < 1.0e-8) return;
+        double speedSquared = movement.lengthSqr();
+        if (speedSquared < 1.0e-8) return;
         LivingEntity target = ArrowRicochet.findFollowTarget(arrow, RANGE);
         if (target == null) return;
         Vec3 aim = target.getBoundingBox().getCenter().subtract(arrow.position());
         if (aim.lengthSqr() < 1.0e-8) return;
-        Vec3 direction = turnToward(movement.normalize(), aim.normalize(), MAX_TURN_RADIANS);
-        arrow.setDeltaMovement(direction.scale(movement.length()));
+        double speed = Math.sqrt(speedSquared);
+        Vec3 direction = turnToward(movement.scale(1 / speed), aim.normalize(), MAX_TURN_RADIANS);
+        Vec3 nextMovement = direction.scale(speed);
+        if (nextMovement.distanceToSqr(movement) <= speedSquared * 1.0e-24) return;
+        arrow.setDeltaMovement(nextMovement);
         arrow.needsSync = true;
     }
 
     public static Vec3 turnToward(Vec3 current, Vec3 desired, double maxRadians) {
         double cosine = Math.max(-1, Math.min(1, current.dot(desired)));
-        double angle = Math.acos(cosine);
-        if (angle <= maxRadians) return desired;
+        double turnCosine = Math.cos(maxRadians);
+        if (maxRadians >= Math.PI || maxRadians >= 0 && cosine >= turnCosine) return desired;
         Vec3 axis = current.cross(desired);
         if (axis.lengthSqr() < 1.0e-12) {
             // A target exactly behind needs a stable turning plane. Turn horizontally first.
@@ -38,7 +42,7 @@ public final class ArrowFollow {
             }
         }
         axis = axis.normalize();
-        return current.scale(Math.cos(maxRadians))
+        return current.scale(turnCosine)
                 .add(axis.cross(current).scale(Math.sin(maxRadians))).normalize();
     }
 }

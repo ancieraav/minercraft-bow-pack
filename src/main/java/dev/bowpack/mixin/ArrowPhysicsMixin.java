@@ -1,7 +1,6 @@
 package dev.bowpack.mixin;
 
 import dev.bowpack.projectile.ArrowAccess;
-import dev.bowpack.projectile.ShotState;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,7 +20,6 @@ abstract class ArrowPhysicsMixin {
     }
 
     private boolean bowpack$antiFriction() {
-        ShotState state = ((ArrowAccess) this).bowpack$getState();
-        return state != null && state.antiFriction();
+        return ((ArrowAccess) this).bowpack$antiFrictionEnabled();
     }
 }

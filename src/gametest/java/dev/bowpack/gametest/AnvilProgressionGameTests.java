@@ -20,42 +20,42 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
 public class AnvilProgressionGameTests {
     @GameTest(structure = ProjectileFixtures.ARENA)
-    public void balancedBooksReachNineCompatibleMaximumLevelsInSurvival(GameTestHelper test)
+    public void balancedBooksReachAllElevenMaximumLevelsInSurvival(GameTestHelper test)
             throws CommandSyntaxException {
         ServerPlayer player = BookAccessGameTests.player(test);
         player.giveExperienceLevels(1000);
         try {
-            for (var impact : List.of(BowEnchantments.BOUNCY_SHOT, BowEnchantments.UNSTOPABLE)) {
-                for (Item item : List.of(Items.BOW, Items.CROSSBOW)) {
-                    ItemStack weapon = BookAccessGameTests.combine(test, player, new ItemStack(item),
-                            book(test, player, BowEnchantments.MULTI_SHOT));
-                    ItemStack frontBack = BookAccessGameTests.combine(test, player,
-                            book(test, player, BowEnchantments.FRONT_SHOT),
-                            book(test, player, BowEnchantments.BACK_SHOT));
-                    ItemStack diagonalRicochet = BookAccessGameTests.combine(test, player,
-                            book(test, player, BowEnchantments.DIAGONAL_SHOT),
-                            book(test, player, BowEnchantments.RICOCHET_SHOT));
-                    ItemStack directions = BookAccessGameTests.combine(test, player, frontBack, diagonalRicochet);
-                    weapon = BookAccessGameTests.combine(test, player, weapon, directions);
+            for (Item item : List.of(Items.BOW, Items.CROSSBOW)) {
+                ItemStack weapon = BookAccessGameTests.combine(test, player, new ItemStack(item),
+                        book(test, player, BowEnchantments.MULTI_SHOT));
+                ItemStack frontBack = BookAccessGameTests.combine(test, player,
+                        book(test, player, BowEnchantments.FRONT_SHOT),
+                        book(test, player, BowEnchantments.BACK_SHOT));
+                ItemStack diagonalRicochet = BookAccessGameTests.combine(test, player,
+                        book(test, player, BowEnchantments.DIAGONAL_SHOT),
+                        book(test, player, BowEnchantments.RICOCHET_SHOT));
+                ItemStack directions = BookAccessGameTests.combine(test, player, frontBack, diagonalRicochet);
+                weapon = BookAccessGameTests.combine(test, player, weapon, directions);
 
-                    ItemStack antiBreakthrough = BookAccessGameTests.combine(test, player,
-                            book(test, player, BowEnchantments.ANTI_FRICTION_SHOT),
-                            book(test, player, BowEnchantments.BREAKTHROUGH_SHOT));
-                    ItemStack special = BookAccessGameTests.combine(test, player, antiBreakthrough,
-                            book(test, player, BowEnchantments.FOLLOW_SHOT));
-                    ItemStack impactSpecial = BookAccessGameTests.combine(test, player,
-                            book(test, player, impact), special);
-                    weapon = BookAccessGameTests.combine(test, player, weapon, impactSpecial);
-                    var registry = test.getLevel().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
-                    for (var key : List.of(BowEnchantments.MULTI_SHOT, BowEnchantments.FRONT_SHOT,
-                            BowEnchantments.BACK_SHOT, BowEnchantments.DIAGONAL_SHOT,
-                            BowEnchantments.RICOCHET_SHOT, impact,
-                            BowEnchantments.ANTI_FRICTION_SHOT, BowEnchantments.BREAKTHROUGH_SHOT,
-                            BowEnchantments.FOLLOW_SHOT)) {
-                        var enchantment = registry.getOrThrow(key);
-                        test.assertValueEqual(EnchantmentHelper.getItemEnchantmentLevel(enchantment, weapon),
-                                enchantment.value().getMaxLevel(), "Survival anvil reaches the maximum: " + key);
-                    }
+                ItemStack antiBreakthrough = BookAccessGameTests.combine(test, player,
+                        book(test, player, BowEnchantments.ANTI_FRICTION_SHOT),
+                        book(test, player, BowEnchantments.BREAKTHROUGH_SHOT));
+                ItemStack unstopableBouncy = BookAccessGameTests.combine(test, player,
+                        book(test, player, BowEnchantments.UNSTOPABLE),
+                        book(test, player, BowEnchantments.BOUNCY_SHOT));
+                ItemStack followAccelerate = BookAccessGameTests.combine(test, player,
+                        book(test, player, BowEnchantments.FOLLOW_SHOT),
+                        book(test, player, BowEnchantments.ACCELERATE));
+                ItemStack special = BookAccessGameTests.combine(test, player, unstopableBouncy, antiBreakthrough);
+                special = BookAccessGameTests.combine(test, player, special, followAccelerate);
+                weapon = BookAccessGameTests.combine(test, player, weapon, special);
+                test.assertValueEqual(EnchantmentHelper.getEnchantmentsForCrafting(weapon).size(), 11,
+                        "The final survival weapon must contain all eleven enchantments");
+                var registry = test.getLevel().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+                for (var key : BowEnchantments.ALL) {
+                    var enchantment = registry.getOrThrow(key);
+                    test.assertValueEqual(EnchantmentHelper.getItemEnchantmentLevel(enchantment, weapon),
+                            enchantment.value().getMaxLevel(), "Survival anvil reaches the maximum: " + key);
                 }
             }
             test.succeed();

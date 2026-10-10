@@ -1,6 +1,7 @@
 package dev.bowpack.gametest;
 
 import dev.bowpack.projectile.ArrowAccess;
+import dev.bowpack.projectile.ArrowFollow;
 import dev.bowpack.projectile.ShotState;
 import java.util.Optional;
 import java.util.UUID;
@@ -60,6 +61,42 @@ public class FollowPhysicsGameTests {
                 "Follow must change direction when a different target becomes nearest");
         first.discard();
         second.discard();
+        arrow.discard();
+        test.succeed();
+    }
+
+    @GameTest(structure = ProjectileFixtures.ARENA)
+    public void followSyncsOnlyWhenSteeringChangesTheVelocity(GameTestHelper test) {
+        Mob target = ProjectileFixtures.cow(test, new Vec3(26, 4, 20));
+        Arrow arrow = arrow(test, new Vec3(20, 4.5, 20), new Vec3(1, 0, 0), true);
+        arrow.setPos(arrow.getX(), target.getBoundingBox().getCenter().y, arrow.getZ());
+        arrow.needsSync = false;
+        ArrowFollow.steer(arrow);
+        test.assertFalse(arrow.needsSync, "An already aligned Follow arrow does not force a network update");
+        test.assertValueEqual(arrow.getDeltaMovement(), new Vec3(1, 0, 0),
+                "Skipping a redundant update preserves the exact movement");
+        target.setPos(target.getX(), target.getY(), target.getZ() + 2);
+        ArrowFollow.steer(arrow);
+        test.assertTrue(arrow.needsSync && arrow.getDeltaMovement().z > 0,
+                "A real turn still synchronizes its changed velocity");
+        target.discard();
+        arrow.discard();
+        test.succeed();
+    }
+
+    @GameTest(structure = ProjectileFixtures.ARENA)
+    public void followPreservesAlignedDiagonalMovementWithoutSync(GameTestHelper test) {
+        Mob target = ProjectileFixtures.cow(test, new Vec3(12, 12, 12));
+        Vec3 movement = new Vec3(2, 3, 4);
+        Arrow arrow = arrow(test, new Vec3(8, 6, 4), movement, true);
+        arrow.setPos(target.getBoundingBox().getCenter().subtract(movement.scale(2)));
+        arrow.needsSync = false;
+        ArrowFollow.steer(arrow);
+        test.assertFalse(arrow.needsSync,
+                "Rounding an already aligned diagonal direction must not force a network update");
+        test.assertValueEqual(arrow.getDeltaMovement(), movement,
+                "Skipping a redundant diagonal update preserves the exact original movement");
+        target.discard();
         arrow.discard();
         test.succeed();
     }

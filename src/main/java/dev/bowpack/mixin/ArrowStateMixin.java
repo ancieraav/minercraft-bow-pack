@@ -26,6 +26,10 @@ abstract class ArrowStateMixin implements ArrowAccess {
     @Unique private static final int BOWPACK_MANAGED = 1;
     @Unique private static final int BOWPACK_RICOCHET = 2;
     @Unique private static final int BOWPACK_BOUNCE_SHIFT = 2;
+    @Unique private static final int BOWPACK_BOUNCE_MASK = 31;
+    @Unique private static final int BOWPACK_ACCELERATE_SHIFT = 7;
+    @Unique private static final int BOWPACK_UNSTOPABLE = 1 << 9;
+    @Unique private static final int BOWPACK_ANTI_FRICTION = 1 << 10;
     @Unique private @Nullable ShotState bowpack$state;
 
     public @Nullable ShotState bowpack$getState() { return bowpack$state; }
@@ -37,7 +41,10 @@ abstract class ArrowStateMixin implements ArrowAccess {
         bowpack$state = state == null ? null : ArrowLifetime.initialize(arrow, state);
         int flags = state == null ? 0 : BOWPACK_MANAGED
                 | (state.ricochetLevel() > 0 && !state.penetrates() ? BOWPACK_RICOCHET : 0)
-                | (state.bounces() << BOWPACK_BOUNCE_SHIFT);
+                | (state.bounces() << BOWPACK_BOUNCE_SHIFT)
+                | (state.accelerateLevel() << BOWPACK_ACCELERATE_SHIFT)
+                | (state.unstopable() ? BOWPACK_UNSTOPABLE : 0)
+                | (state.antiFriction() ? BOWPACK_ANTI_FRICTION : 0);
         arrow.getEntityData().set(BOWPACK_SHOT_FLAGS, flags);
     }
 
@@ -50,7 +57,19 @@ abstract class ArrowStateMixin implements ArrowAccess {
     }
 
     public int bowpack$remainingBounces() {
-        return bowpack$flags() >>> BOWPACK_BOUNCE_SHIFT;
+        return (bowpack$flags() >>> BOWPACK_BOUNCE_SHIFT) & BOWPACK_BOUNCE_MASK;
+    }
+
+    public int bowpack$accelerateLevel() {
+        return (bowpack$flags() >>> BOWPACK_ACCELERATE_SHIFT) & 3;
+    }
+
+    public boolean bowpack$unstopableEnabled() {
+        return (bowpack$flags() & BOWPACK_UNSTOPABLE) != 0;
+    }
+
+    public boolean bowpack$antiFrictionEnabled() {
+        return (bowpack$flags() & BOWPACK_ANTI_FRICTION) != 0;
     }
 
     public void bowpack$spendBounce() {

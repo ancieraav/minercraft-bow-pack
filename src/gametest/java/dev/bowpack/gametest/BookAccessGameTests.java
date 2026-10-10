@@ -35,7 +35,8 @@ public class BookAccessGameTests {
             new BookSpec(BowEnchantments.ANTI_FRICTION_SHOT, 1),
             new BookSpec(BowEnchantments.BREAKTHROUGH_SHOT, 1),
             new BookSpec(BowEnchantments.UNSTOPABLE, 1),
-            new BookSpec(BowEnchantments.FOLLOW_SHOT, 1));
+            new BookSpec(BowEnchantments.FOLLOW_SHOT, 1),
+            new BookSpec(BowEnchantments.ACCELERATE, 3));
 
     @GameTest(structure = ProjectileFixtures.ARENA)
     public void nativeGiveProvidesEveryDocumentedBookWithoutCustomCommands(GameTestHelper test)
@@ -59,7 +60,7 @@ public class BookAccessGameTests {
     }
 
     @GameTest(structure = ProjectileFixtures.ARENA)
-    public void creativeCatalogContainsOnlyTwentySevenSearchableBooks(GameTestHelper test) {
+    public void creativeCatalogContainsOnlyThirtySearchableBooks(GameTestHelper test) {
         CreativeModeTabs.tryRebuildTabContents(test.getLevel().enabledFeatures(), true,
                 test.getLevel().registryAccess());
         var tab = BuiltInRegistries.CREATIVE_MODE_TAB.getOptional(BowPack.id("bow_pack")).orElseThrow();
@@ -82,7 +83,8 @@ public class BookAccessGameTests {
             for (Item item : List.of(Items.BOW, Items.CROSSBOW)) {
                 for (var pair : List.of(
                         List.of(BowEnchantments.RICOCHET_SHOT, BowEnchantments.ANTI_FRICTION_SHOT),
-                        List.of(BowEnchantments.BREAKTHROUGH_SHOT, BowEnchantments.FOLLOW_SHOT))) {
+                        List.of(BowEnchantments.BREAKTHROUGH_SHOT, BowEnchantments.FOLLOW_SHOT),
+                        List.of(BowEnchantments.FOLLOW_SHOT, BowEnchantments.ACCELERATE))) {
                     ItemStack weapon = new ItemStack(item);
                     var enchantments = test.getLevel().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
                     for (var key : pair) {
@@ -134,8 +136,8 @@ public class BookAccessGameTests {
         menu.createResult();
         int cost = menu.getCost();
         int previousLevel = player.experienceLevel;
-        test.assertTrue(cost > 0 && menu.getSlot(AnvilMenu.RESULT_SLOT).mayPickup(player),
-                "The native survival anvil must allow the book combination");
+        test.assertTrue(cost > 0 && cost < 40 && menu.getSlot(AnvilMenu.RESULT_SLOT).mayPickup(player),
+                "The native survival anvil must allow the book combination below 40 levels; cost: " + cost);
         ItemStack result = menu.getSlot(AnvilMenu.RESULT_SLOT).safeTake(1, 1, player);
         test.assertFalse(result.isEmpty(), "Taking the anvil output must return the enchanted weapon");
         test.assertValueEqual(player.experienceLevel, previousLevel - cost,
@@ -147,7 +149,7 @@ public class BookAccessGameTests {
     }
 
     private static void assertCatalog(GameTestHelper test, Collection<ItemStack> books) {
-        test.assertValueEqual(books.size(), 27, "The Bow Pack catalog must contain exactly 27 books");
+        test.assertValueEqual(books.size(), 30, "The Bow Pack catalog must contain exactly 30 books");
         test.assertTrue(books.stream().allMatch(stack -> stack.is(Items.ENCHANTED_BOOK)),
                 "The Bow Pack catalog must not contain demo weapons or other items");
         var enchantments = test.getLevel().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
